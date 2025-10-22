@@ -11,21 +11,29 @@ class SuperHeroRepository extends IRepository {
   }
 
   async buscarPorAtributo(atributo, valor) {
-    const query = {}
-    query[atributo] = valor
-    return await superHero.find(query)
+    const consulta = {}
+    consulta[atributo] = valor
+    return await superHero.find(consulta)
   }
 
   async obtenerMayoresDe30() {
-    return await superHero.find({
-      $and: [
-        { edad: { $gt: 30 } },
-        { planetaOrigen: "Tierra" },
-        {
-          $expr: { $gte: [{ $size: "$poderes" }, 2] }
-        }
-      ]
-    })
+    // return await superHero.find({
+    //   $and: [
+    //     { edad: { $gt: 30 } },
+    //     { planetaOrigen: "Tierra" },
+    //     {
+    //       $expr: { $gte: [{ $size: "$poderes" }, 2] }
+    //     }
+    //   ]
+    // })
+    const heroes = await superHero.find(); // trae todos los documentos
+    const filtrados = heroes.filter(hero =>
+      hero.edad > 30 &&
+      hero.planetaOrigen === "Tierra" &&
+      hero.poderes.length >= 2
+    );
+
+    return filtrados;
   }
 
 }
